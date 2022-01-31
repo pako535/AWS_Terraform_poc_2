@@ -13,6 +13,7 @@ resource "aws_lambda_function" "biel_lambda_run_bike_crawler" {
   handler          = "lambda_run_bike_crawler.lambda_handler"
   runtime          = "python3.8"
   timeout          = 300
+  source_code_hash = "${data.archive_file.lambda_run_bike_crawler.output_base64sha256}"
 
   environment {
     variables = {
@@ -36,6 +37,7 @@ resource "aws_lambda_function" "lambda_run_history_crawler" {
   handler          = "lambda_run_history_crawler.lambda_handler"
   runtime          = "python3.8"
   timeout          = 300
+  source_code_hash = "${data.archive_file.lambda_run_history_crawler.output_base64sha256}"
 
   environment {
     variables = {
@@ -59,6 +61,7 @@ resource "aws_lambda_function" "lambda_run_paraquet_crawler" {
   handler          = "lambda_run_paraquet_crawler.lambda_handler"
   runtime          = "python3.8"
   timeout          = 300
+  source_code_hash = "${data.archive_file.lambda_run_paraquet_crawler.output_base64sha256}"
 
   environment {
     variables = {
@@ -84,6 +87,7 @@ resource "aws_lambda_function" "biel_send_event_new_file_is_created_terraform" {
   handler          = "lambda_send_event_new_file_is_created.lambda_handler"
   runtime          = "python3.8"
   timeout          = 300
+  source_code_hash = "${data.archive_file.biel_send_event_new_file_is_created_terraform.output_base64sha256}"
 }
 
 resource "aws_s3_bucket_notification" "trigger_lambda_from_s3" {
@@ -129,15 +133,14 @@ resource "aws_lambda_function" "lambda_start_step_function" {
   handler          = "lambda_start_step_function.lambda_handler"
   runtime          = "python3.8"
   timeout          = 300
-
+  source_code_hash = "${data.archive_file.lambda_start_step_function.output_base64sha256}"
+  
   environment {
     variables = {
       step_function_arn = "${aws_sfn_state_machine.biel-poc-2-step-machine.arn}",
     }
   }
 }
-
-
 
 resource "aws_lambda_permission" "with_sns" {
     statement_id = "AllowExecutionFromSNS"
